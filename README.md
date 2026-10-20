@@ -1,3 +1,23 @@
+# Vault Atelier — Ledger Passwords backup editor
+
+Maintained in this fork by [JakeIToffical](https://github.com/JakeIToffical).
+
+An independent, single-file browser app for editing Ledger Passwords nickname backups. Not affiliated with or endorsed by Ledger.
+
+The original Ledger application and its history are preserved below. The added web app lives in [`clients/vault-atelier/`](clients/vault-atelier/).
+
+## Use the web app
+
+Download [`Ledger-Backup-Studio.html`](clients/vault-atelier/Ledger-Backup-Studio.html) and open it in Chrome or Edge. It includes bulk adding and removing nicknames, manual/alphabetical ordering, German/English/French/Spanish, JSON/raw consistency checks, and USB backup/restore. For USB, use a secure browser context such as HTTPS or localhost when needed. See the [app instructions](clients/vault-atelier/README.md).
+
+**Use at your own risk.** Keep a separate, unchanged backup before every restore. Restoring replaces the entire nickname list. Actual passwords are generated only by the Ledger. Never enter a recovery phrase or private keys. Full hardware restore has not been verified.
+
+This fork is distributed under [Apache-2.0](LICENSE). Upstream attribution and adaptation details are retained in the app's [NOTICE](clients/vault-atelier/NOTICE) and [third-party notes](clients/vault-atelier/THIRD-PARTY.md). No personal backups or development test artifacts are published.
+
+---
+
+## Original Ledger documentation
+
 # app-passwords
 
 ## Quick summary

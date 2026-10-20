@@ -1,0 +1,15 @@
+Vault Atelier — Ledger Backup Studio
+
+This project is distributed under the Apache License, Version 2.0.
+
+This application includes an adapted implementation of the Ledger WebUSB
+transport and metadata format, with an independent user interface.
+Sources: LedgerHQ/app-passwords and LedgerHQ/ledgerjs.
+Original Ledger source notices remain applicable to the respective portions.
+Copyright Ledger / Ledger SAS and the respective upstream contributors.
+
+Changes include a standalone browser interface, bulk nickname editing,
+record-preserving reordering, four interface languages, additional validation,
+and backup/restore confirmation and verification flows.
+
+This is an independent project, not affiliated with or endorsed by Ledger.
