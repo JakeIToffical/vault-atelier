@@ -1,4 +1,4 @@
-# Vault Atelier — Ledger Backup Studio
+# Vault Atelier — Ledger Password App Backup Editor
 
 [**Open the web app**](https://jakeitoffical.github.io/vault-atelier/Ledger-Backup-Studio.html) · [Download the HTML file](https://github.com/JakeIToffical/vault-atelier/raw/refs/heads/master/Ledger-Backup-Studio.html)
 
