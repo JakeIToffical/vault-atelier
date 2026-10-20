@@ -31,6 +31,23 @@ Then open `http://localhost:8765/Ledger-Backup-Studio.html`.
 
 Host only the app, never your personal backup files. Backup contents are processed locally in your browser and are not uploaded by the app. The language preference is stored locally when the browser permits it.
 
+## Browser support
+
+USB features are enabled only when the browser exposes a complete WebUSB API, the page is a secure context, and its Permissions Policy permits USB. If these checks fail, USB buttons are disabled with a localized explanation. Backup-file editing remains available. An API reported as unavailable at connection time is also blocked; cancelling the device picker still allows retrying.
+
+| Browser/platform | WebUSB availability |
+| --- | --- |
+| Chrome and Edge on desktop | Supported, subject to permissions and device/OS compatibility |
+| Chrome on Android | API supported; USB host/OTG, cable and Ledger compatibility are also required |
+| Opera / Samsung Internet | Supported in relevant Chromium-based versions; actual API availability is checked |
+| Safari on macOS, iPhone and iPad | Not currently supported |
+| Firefox on desktop and Android | Not currently supported |
+| iPhone/iPad browsers and embedded webviews | Do not assume support from the browser name; the actual API is checked |
+
+An available API does not prove that a Ledger is attached or that the complete hardware workflow will work. The capability check does not scan, enumerate or open devices. Device selection still requires a user click and browser permission.
+
+Sources: [MDN WebUSB compatibility](https://developer.mozilla.org/en-US/docs/Web/API/WebUSB_API#browser_compatibility), [MDN browser compatibility data](https://github.com/mdn/browser-compat-data/blob/main/api/USB.json), [Chrome WebUSB security requirements](https://developer.chrome.com/docs/capabilities/usb#privacy_and_security). Browser support checked on 2026-10-20.
+
 ## Restore and safety
 
 **Use at your own risk.** This independent tool is provided without warranty. Errors or interrupted restores may cause data loss or make passwords inaccessible.
