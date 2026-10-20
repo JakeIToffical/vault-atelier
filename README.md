@@ -1,5 +1,7 @@
 # Vault Atelier — Ledger Backup Studio
 
+[**Web-App direkt öffnen**](https://jakeitoffical.github.io/vault-atelier/Ledger-Backup-Studio.html) · [HTML-Datei herunterladen](https://github.com/JakeIToffical/vault-atelier/raw/refs/heads/master/Ledger-Backup-Studio.html)
+
 Maintainer: [JakeIToffical](https://github.com/JakeIToffical).
 
 Eigenständiger Browser-Client zum Bearbeiten von Ledger-Passwords-Backups. Dieses Repository entwickelt keine Ledger-Geräte-App und enthält in seinem aktuellen Stand keine Firmware, Firmware-Build-Dateien oder Firmware-Tests. Kein offizielles Ledger-Produkt.
