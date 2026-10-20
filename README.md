@@ -9,7 +9,8 @@ This project develops only the browser client. Its current file tree contains no
 ## Features
 
 - Open an existing JSON backup or back up your Ledger over USB.
-- Add nicknames in bulk or remove entries from the draft.
+- Add nicknames in bulk with live per-line character counts and red overflow highlighting from character 20.
+- Remove entries from the draft or re-add removed names. Intentional setting changes require explicit confirmation.
 - Sort the full list alphabetically or move individual entries.
 - Download the edited backup as a new file.
 - Restore a checked draft, with a separate safety backup and on-device confirmation.
@@ -47,6 +48,24 @@ USB features are enabled only when the browser exposes a complete WebUSB API, th
 An available API does not prove that a Ledger is attached or that the complete hardware workflow will work. The capability check does not scan, enumerate or open devices. Device selection still requires a user click and browser permission.
 
 Sources: [MDN WebUSB compatibility](https://developer.mozilla.org/en-US/docs/Web/API/WebUSB_API#browser_compatibility), [MDN browser compatibility data](https://github.com/mdn/browser-compat-data/blob/main/api/USB.json), [Chrome WebUSB security requirements](https://developer.chrome.com/docs/capabilities/usb#privacy_and_security). Browser support checked on 2026-10-20.
+
+## Batch editing and intentional password changes
+
+The batch editor shows a character count for each line. Nicknames may contain 1–19 printable ASCII characters. Character 20 and later are highlighted in red; empty interior lines, non-ASCII characters and duplicate names are also explained next to the input. Invalid input disables adding until corrected. Errors such as insufficient storage are shown beside the Add button as well as in the main status area. Input is never trimmed or truncated.
+
+To intentionally change a password's settings, such as increasing its length from 20 to 64 characters while keeping the same nickname:
+
+1. Remove that entry from the draft. This does not yet change the Ledger.
+2. Enter the same nickname in the batch editor and select the new settings.
+3. Review the highlighted parameter change and explicitly confirm that you want a different password.
+4. Add the entry, save a separate backup and review the full restore preview.
+5. Restore only after confirming the listed changes to existing device passwords. A second confirmation is required for those changes.
+
+Re-adding a removed original name with matching settings restores the original entry. Names still present in the draft are rejected as duplicates. Changing length, character sets or generation changes the derived password; this does not automatically update credentials on websites or other devices. Other retained entries remain unchanged.
+
+### Capacity
+
+There are two independent limits: 4096 metadata bytes and 178 active entries. A maximal generation-1 record uses 23 bytes: a 19-byte ASCII nickname plus 4 bytes of record header and settings. Therefore, 178 maximal records plus the 2-byte terminator fit exactly in 4096 bytes. All 178 entries can request 64-character passwords and all character sets simultaneously because passwords themselves are not stored in the backup. Shorter nicknames do not increase the 178-entry limit.
 
 ## Restore and safety
 
