@@ -1,183 +1,43 @@
-# Vault Atelier — Ledger Passwords backup editor
+# Vault Atelier — Ledger Backup Studio
 
-Maintained in this fork by [JakeIToffical](https://github.com/JakeIToffical).
+Maintainer: [JakeIToffical](https://github.com/JakeIToffical).
 
-An independent, single-file browser app for editing Ledger Passwords nickname backups. Not affiliated with or endorsed by Ledger.
+Eigenständiger Browser-Client zum Bearbeiten von Ledger-Passwords-Backups. Dieses Repository entwickelt keine Ledger-Geräte-App und enthält in seinem aktuellen Stand keine Firmware, Firmware-Build-Dateien oder Firmware-Tests. Kein offizielles Ledger-Produkt.
 
-The original Ledger application and its history are preserved below. The added web app lives in [`clients/vault-atelier/`](clients/vault-atelier/).
+`Ledger-Backup-Studio.html` in Chrome oder Edge öffnen. Die App ist vollständig in dieser einen Datei enthalten; keine Installation und keine externen Bibliotheken nötig.
 
-## Use the web app
+- Backup öffnen oder per USB vom Ledger sichern.
+- Nicknames hinzufügen, entfernen oder sortieren.
+- Entwurf als neue Backup-Datei herunterladen.
+- Für Restore den Entwurf prüfen, die separate Sicherheitskopie speichern und am Ledger bestätigen. Restore ersetzt die gesamte Liste.
+- Deutsch, Englisch, Französisch und Spanisch oben rechts auswählen.
 
-Download [`Ledger-Backup-Studio.html`](clients/vault-atelier/Ledger-Backup-Studio.html) and open it in Chrome or Edge. It includes bulk adding and removing nicknames, manual/alphabetical ordering, German/English/French/Spanish, JSON/raw consistency checks, and USB backup/restore. For USB, use a secure browser context such as HTTPS or localhost when needed. See the [app instructions](clients/vault-atelier/README.md).
+Nicknames und Ableitungsparameter bestimmen die Passwörter. Erhaltene Einträge werden unverändert übernommen. Die tatsächlichen Passwörter erzeugt der Ledger. Niemals eine Recovery Phrase oder private Schlüssel eingeben.
 
-**Use at your own risk.** Keep a separate, unchanged backup before every restore. Restoring replaces the entire nickname list. Actual passwords are generated only by the Ledger. Never enter a recovery phrase or private keys. Full hardware restore has not been verified.
+## USB und eigenes Hosting
 
-This fork is distributed under [Apache-2.0](LICENSE). Upstream attribution and adaptation details are retained in the app's [NOTICE](clients/vault-atelier/NOTICE) and [third-party notes](clients/vault-atelier/THIRD-PARTY.md). No personal backups or development test artifacts are published.
+Nano X entsperren, Passwords öffnen und Ledger Live sowie andere Ledger-Tabs schließen. WebUSB benötigt Chrome/Edge und einen sicheren Kontext. Falls USB beim direkten Öffnen nicht verfügbar ist, die HTML-Datei unter eigenem HTTPS hosten oder aus diesem Ordner lokal starten:
 
----
-
-## Original Ledger documentation
-
-# app-passwords
-
-## Quick summary
-
-The Passwords application for Ledger Device is available for download on
-[Ledger Wallet](https://shop.ledger.com/pages/ledger-wallet).
-
-This application demonstrates a Password Manager implemented with no support from the host.
-The passwords are typed from the device interacting as a keyboard to the connected computer / phone.
-
-## Usage
-
-To create a password:
-
-- In the application settings, choose which kinds of characters new passwords use, and their length
-  (see below).
-- Choose "Create a new password" and enter a nickname for the new entry (for instance, "wikipedia.com").
-  The device then derives a deterministic password from the device's seed and this nickname.
-
-To type a password, select it in your list of passwords: the device types it on the connected computer.
-To read it instead, use "Show a password".
-
-If you want to add a lot of passwords, this process can be pretty painful. Instead of doing it manually,
-you can use the [backup tool](https://passwords.ledger.com) to load a custom list of password nicknames.
-Nicknames in such a list must use printable ASCII only and stay under 20 characters, matching what the device
-keyboard can produce: the nickname is the input the password is derived from, so a nickname you cannot retype
-on the device is a password you cannot get back.
-
-### Application settings
-
-In the application settings, the user can configure
-
-- Which kinds of characters new passwords use: uppercase letters, lowercase letters, numbers,
-  separators (`-`, `_` and space) and special characters. Since version 1.4.0, a new password
-  contains at least one character of each enabled kind, and at least one of letters, numbers or
-  special characters must stay enabled.
-- The length of new passwords: 8, 12, 16, 20, 24, 32, 48 or 64 characters (20 by default, and the
-  only length before version 1.4.0), or a 4 or 6-digit PIN, which requires numbers to be the only
-  kind of characters enabled.
-
-The character kinds and the length are recorded with each entry when it is created: changing the
-settings later does not change existing passwords.
-
-- Which keyboard the device should emulate when typing a password (Qwerty, International Qwerty, Azerty or German Qwertz).
-- If the `Enter` key should be pressed automatically after typing a password
-  (this is convenient for typing start-up password at encrypted servers without attaching display and keyboard, for instance).
-
-## Backup
-
-As passwords are deterministically derived, it's not a problem if you lose your device,
-as long as you remember the password nicknames and you still have your device recovery phrase
-to set up again the Passwords app on a new device.
-
-Same applies when updating the device firmware or the application itself: the list of password nicknames
-is erased and won't be restored automatically, so make sure to save a backup using [this tool](https://passwords.ledger.com).
-
-A backup made with any version of the app restores on version 1.4.0 and later with the same passwords.
-A backup holding passwords created with version 1.4.0 or later restores only on version 1.4.0 or later.
-
-These nicknames are not confidential (meaning, someone who finds them will not be able to retrieve your passwords
-without your [24-words recovery phrase](https://www.ledger.com/academy/crypto/what-is-a-recovery-phrase)),
-so you don't have to hide your backup like you did with your recovery phrase. Sending it to yourself by e-mail is fine.
-
-## Password generation mechanism
-
-- The nickname is SHA-256 hashed
-
-- The SHA-256 components are turned into 8 big endian uint32 | 0x80000000
-
-- A private key and chain code are derived for secp256k1 over 0x80505744 / the path computed before
-
-- The private key and chain code are SHA-256 hashed, the result is used as the entropy to seed an AES DRBG
-
-- A password of the entry's length is generated by randomly choosing from the enabled character sets
-  of the entry, using the previously seeded DRBG
-
-- Each password entry records the version of the generation rule it was created with, so existing
-  passwords never change:
-  - version 0: 20 characters, at least one uppercase letter, lowercase letter, digit and space, for
-    each of those sets that is enabled
-  - version 1 (app 1.4.0 and later): the length recorded in the entry, at least one uppercase letter,
-    lowercase letter and digit, one separator (`-`, `_` or space) and one special character, for each
-    of those groups that is enabled; each character is drawn uniformly (the version 0 draw slightly
-    favours some characters)
-
-## Troubleshooting
-
-- If you configured a password with some charset only, and you get unwanted characters when typing it,
-  check that you have configured the application with the right keyboard.
-  It must be configured like the keyboard settings of your operating systems to type correctly.
-  The password shown on the device ("Show a password") is always the reference.
-
-- If extra characters appear when typing into a text editor, check its auto-closing of brackets and
-  quotes: the editor may automatically add the closing character itself.
-
-- If the keyboard is not recognized by your computer, have a look here: [Fix USB connection issues](https://support.ledger.com/article/115005165269-zd)
-
-## Tests
-
-### Unit
-
-#### Prerequisite
-
-Be sure to have installed:
-
-- CMake >= 3.10
-- CMocka >= 1.1.5
-
-and for code coverage generation:
-
-- lcov >= 1.14
-
-#### Overview
-
-Unit tests are in `C` and uses `cmake` to build and `cmocka` as a library.
-You will then need to compile the tests:
-
-```bash
-(cd tests/unit/ && \
- rm -rf build/ && \
- cmake -B build -H. && \
- make -C build)
+```sh
+python3 -m http.server 8765 --bind 127.0.0.1
 ```
 
-You can then run the tests:
+Dann `http://localhost:8765/Ledger-Backup-Studio.html` öffnen. Nur die App hosten, keine persönlichen Backups. Die App sendet keine Backup-Daten an einen Server.
 
-```bash
-(cd tests/unit/ && \
- CTEST_OUTPUT_ON_FAILURE=1 make -C build test)
-```
+## Verwendung auf eigene Gefahr
 
-### Functional
+Unabhängiges Werkzeug ohne Gewähr; kein offizielles Ledger-Produkt. Fehler oder unterbrochene Restores können Datenverlust oder nicht mehr erreichbare Passwörter verursachen. Vor jedem Restore eine separate, unveränderte Sicherung behalten und das Ergebnis am Gerät prüfen. Ein vollständiger Hardware-Restore wurde nicht bestätigt.
 
-Functional tests are written with Pytest.
-Before running them, you first need to compile the application with env variables `TESTING=1` and `POPULATE=1`:
+## Quellen und Lizenz
 
-```bash
-make all TESTING=1 POPULATE=1
-```
+Format und USB-Protokoll folgen LedgerHQ/app-passwords und LedgerHQ/ledgerjs. Details in THIRD-PARTY.md; die Ledger-Lizenz liegt bei. Das Paket enthält keine persönlichen Backups und keine Entwicklungswerkzeuge.
 
-Then you can execute tests on speculos with:
+## Lizenz
 
-```bash
-pytest tests/functional
-```
+Apache License 2.0 — siehe [LICENSE](LICENSE). Quellen und Änderungen sind in [NOTICE](NOTICE) und [THIRD-PARTY.md](THIRD-PARTY.md) dokumentiert. Die Lizenz gewährt keine allgemeinen Rechte an Ledger-Marken.
 
-To run tests on a real device, load the app on it:
+## Kompatibilität
 
-```bash
-make load TESTING=1 POPULATE=1
-```
+Geprüfter Stand: Backup-Format und USB-Protokoll aus LedgerHQ/app-passwords, Commit `bf2319b8ed8abcb9c77173945d27c33d7927155b`; Geräteabfrage an Nano X mit Passwords 1.4.1 erfolgreich. Unterstützte Generationsversionen: 0 und 1. Ein vollständiger Hardware-Backup-/Restore-Durchlauf ist nicht bestätigt.
 
-Then open the app on your device and run:
-
-```bash
-pytest --hid
-```
-
-## Credits
-
-This application uses
-
-- MBED TLS AES DRBG implementation [source-code](https://tls.mbed.org/ctr-drbg-source-code)
+Ziel ist die Kompatibilität mit aktuellen Ledger-Passwords-Versionen. Eine automatische Garantie für zukünftige Versionen gibt es nicht. Unbekannte Generationsversionen, beschädigte oder widersprüchliche Backups werden abgelehnt. Vor Freigabe einer neuen Ledger-Version müssen Format, Protokoll und Restore erneut geprüft werden. Solange diese Schnittstellen gleich bleiben, ist in der Regel keine Änderung am Client nötig.
